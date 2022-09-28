@@ -8,7 +8,7 @@ console.log('router loaded');
 
 router.get('/',homeController.home);
 
-router.get('/cart',homeController.cart)
+router.get('/cart',homeController.cart);
 
 router.use('/user',users);
 
