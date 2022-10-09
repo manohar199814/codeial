@@ -15,6 +15,10 @@ router.get('/sign-up',userController.signUp);
 router.post('/create',userController.create); 
 
 //post request route for singin submits
-router.post('/createSession',userController.createSession);
+router.post('/create-session',userController.createSession);
+
+
+
+router.get('/sign-out',userController.signOut);
 
 module.exports = router;
