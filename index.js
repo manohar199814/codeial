@@ -2,6 +2,14 @@ const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+
+//used for session cookie
+const session = require('express-session');
+const passport = require('passport');
+const passportLocal = require('./config/passport-local-strategy');
+
+const MongoDbStore  = require('connect-mongo');
+
 const path = require('path');
 const port = 8000;
 
@@ -29,6 +37,24 @@ app.set('view engine','ejs');
 //view folder path
 app.set('views',path.join(__dirname,'views'));
 
+//mongo store is used to store session cookie in db
+app.use(session({
+    name:'codeial',
+    secret:'blahsomething',
+    saveUninitialized:false,
+    resave:false,
+    cookie:{
+        maxAge:(1000 * 60 * 100)
+    },
+    store: MongoDbStore.create({ mongoUrl: 'mongodb://0.0.0.0:27017/codeial_development' })
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+//user information is passed to locals when user is authenticated
+app.use(passport.setAuthenticatedUser);
+
+//use express router
 app.use('/',require('./routes'));
 
 app.listen(port,(err) => {

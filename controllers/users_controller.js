@@ -1,7 +1,7 @@
 const User = require('../models/user');
 
 module.exports.profile = (req,res) => {
-    res.render('users',{title:'user profile'});
+    res.render('user_profile',{title:'user profile'});
 }
 
 module.exports.posts = (req,res) => {
@@ -19,6 +19,12 @@ module.exports.signUp = (req,res) =>{
     res.render('user_sign_up',{title:'user SignUp'});
 }
 
+module.exports.signOut = (req,res) => {
+    req.logout(function(err) {
+        if (err) { console.log(err); }
+        res.redirect('/');
+      });
+}
 //post request after submitting signUP form
 module.exports.create = (req,res) => {
     if(req.body.password !== req.body.confirm_password){
@@ -46,5 +52,5 @@ module.exports.create = (req,res) => {
 
 //post request after submitting signIn form
 module.exports.createSession = (req,res) => {
-
+    return res.redirect('/');
 }
