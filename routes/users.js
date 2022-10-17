@@ -11,7 +11,7 @@ router.get('/posts',userController.posts);
 
 router.get('/sign-in',passport.checkAuthenticationSignin,userController.signIn);
 
-router.get('/sign-up',userController.signUp);
+router.get('/sign-up',passport.checkAuthenticationSignin,userController.signUp);
 
 router.get('/sign-out',userController.signOut);
 

@@ -3,20 +3,30 @@ const expressLayouts = require('express-ejs-layouts');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
+const mongoose = require('./config/mongoose');
+
 //used for session cookie
 const session = require('express-session');
 const passport = require('passport');
 const passportLocal = require('./config/passport-local-strategy');
-
 const MongoDbStore  = require('connect-mongo');
+
+//used to parse scss to css
+const sassMiddleware = require('node-sass-middleware');
 
 const path = require('path');
 const port = 8000;
 
-const mongoose = require('./config/mongoose');
-
 const app = express();
 
+app.use(sassMiddleware({
+    /* Options */
+    src: path.join(__dirname, 'assets','scss'),
+    dest: path.join(__dirname, 'assets','css'),
+    debug: true,
+    outputStyle: 'extended',
+    prefix:  '/css'  // Where prefix is at <link rel="stylesheets" href="prefix/style.css"/>
+}));
 
 app.use(expressLayouts);
 //extract styles and scripts for subpages into layout
