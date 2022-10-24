@@ -62,8 +62,7 @@ module.exports.create = (req,res) => {
         }else{
             return res.redirect('back');
         }
-    })
-    
+    });
 }
 
 //post request after submitting signIn form
