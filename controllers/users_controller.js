@@ -1,7 +1,23 @@
 const User = require('../models/user');
 
 module.exports.profile = (req,res) => {
-    res.render('user_profile',{title:'user profile'});
+    User.findById(req.params.id,(err,user) => {
+        return res.render('user_profile',{
+            title:'User Profile',
+            profile_user:user
+        });
+    });   
+}
+
+module.exports.update = (req,res) =>{
+
+    if(req.user.id == req.params.id){
+        User.findByIdAndUpdate(req.params.id,req.body,(err,user) => {
+            res.redirect('back')
+        })
+    }else{
+        res.status(401).send('un authorised');
+    }
 }
 
 module.exports.posts = (req,res) => {
@@ -20,7 +36,7 @@ module.exports.signUp = (req,res) =>{
 }
 
 module.exports.signOut = (req,res) => {
-    req.logout(function(err) {
+    return req.logout(function(err) {
         if (err) { console.log(err); }
         res.redirect('/');
       });

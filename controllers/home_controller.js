@@ -1,4 +1,5 @@
 const Post = require('../models/posts');
+const User = require('../models/user');
 
 module.exports.home = function (req,res) {
     // console.log(req.cookies);
@@ -18,11 +19,22 @@ module.exports.home = function (req,res) {
         populate:{path:'user'}
     })
     .exec(function(err, posts) {
-            if(err){
-                console.log('Error in fetching posts from DB');
-                return;
-            }
-            return res.render('home', {title: 'home',posts:posts});
+
+
+        if(err){
+            console.log('Error in fetching posts from DB');
+            return;
+        }
+
+
+        User.find({},function(err,users){
+            return res.render('home', {
+                title: 'home',
+                posts:posts,
+                all_users:users
+            });
+        })        
+        
     });
     
     

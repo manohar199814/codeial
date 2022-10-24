@@ -1,5 +1,17 @@
 <link rel="stylesheet" href="/css/user_profile.css">
 <h1>This is codeial/<%= title %></h1>
 
-<p> <%= user.email %></p>
-<p> <%= user.name %></p>
+
+
+<% if(user.id == profile_user.id) { console.log('profile user ', profile_user) %>
+    <p> <%= profile_user.email %></p>
+    <p> <%= profile_user.name %></p>
+    <form action="/user/update/<%= profile_user.id %>" method="POST">
+        <input type="text" name="name" placeholder="Your Name" value="<%= profile_user.name %>" required>
+        <input type="email" name="email" placeholder="Your Email" value="<%= profile_user.email %>" required>
+        <button type="submit">Update</button>
+    </form>
+<% }else{ %>
+    <p> <%= profile_user.email %></p>
+    <p> <%= profile_user.name %></p>
+<% } %>
