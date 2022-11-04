@@ -12,6 +12,7 @@ module.exports.create = async function (req,res) {
         });
         post.comments.push(comment);
         post.save();
+        req.flash('success','comment posted');
         res.redirect('back');
     }
 }
@@ -23,13 +24,15 @@ module.exports.destroy = async function(req,res) {
             let postId = comment.post;
             comment.remove();
             let post = await Post.findByIdAndUpdate(postId,{ $pull:{comments:req.params.id}});
+            req.flash('success','comment deleted');
             return res.redirect('back');
         }else{
+            req.flash('error','You cant delete Comment');
             return res.redirect('back');
         }   
 
     }catch(err){
-        console.log('error',err);
+        req.flash('error',err);
         return;
     }
 }

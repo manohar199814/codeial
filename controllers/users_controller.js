@@ -38,28 +38,32 @@ module.exports.signUp = (req,res) =>{
 module.exports.signOut = (req,res) => {
     return req.logout(function(err) {
         if (err) { console.log(err); }
+        req.flash('success','You have logged out!')
         res.redirect('/');
       });
 }
 //post request after submitting signUP form
 module.exports.create = (req,res) => {
     if(req.body.password !== req.body.confirm_password){
+        req.flash('error','password not matched');
         return res.redirect('back');
     }
 
     User.findOne({email:req.body.email},(err,user) => {
         if(err){
-            console.log('error in signup user');
+            req.flash('error','error in signup user');
             return;
         }
         if(!user){
             User.create(req.body,(err,user) =>{
                 if(err){
-                    console.log('error in signup user');
+                    req.flash('error','error in signup user');
                 }
+                req.flash('success','Sign up Successful')
                 return res.redirect('/user/sign-in');
             });
         }else{
+            req.flash('error','User already exists');
             return res.redirect('back');
         }
     });
@@ -67,5 +71,6 @@ module.exports.create = (req,res) => {
 
 //post request after submitting signIn form
 module.exports.createSession = (req,res) => {
+    req.flash('success','logged in Successfully');
     return res.redirect('/');
 }

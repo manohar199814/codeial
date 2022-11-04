@@ -1,8 +1,8 @@
-<li> 
+<li id="post-<%= posts[i]._id %>"> 
     <p>
         <% if (locals.user && locals.user.id  == posts[i].user.id ) {%>
             <small>
-                <a href="/posts/destroy/<%= posts[i].id %>">X</a>
+                <a class="delete-post-button" href="/posts/destroy/<%= posts[i].id %>">X</a>
             </small>
         <% } %>    
         <%= posts[i].content %>

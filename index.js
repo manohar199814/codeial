@@ -13,6 +13,9 @@ const MongoDbStore  = require('connect-mongo');
 
 //used to parse scss to css
 const sassMiddleware = require('node-sass-middleware');
+//used to display flash messages
+const flash = require('connect-flash');
+const customMware = require('./config/middleware')
 
 const path = require('path');
 const port = 8000;
@@ -28,6 +31,14 @@ app.use(sassMiddleware({
     prefix:  '/css'  // Where prefix is at <link rel="stylesheets" href="prefix/style.css"/>
 }));
 
+//static files folder
+app.use(express.static('./assets'));
+
+//set up view engine type
+app.set('view engine','ejs');
+//view folder path
+app.set('views',path.join(__dirname,'views'));
+
 app.use(expressLayouts);
 //extract styles and scripts for subpages into layout
 app.set('layout extractStyles',true);
@@ -38,14 +49,6 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 //cookie parser
 app.use(cookieParser())
-
-//static files folder
-app.use(express.static('./assets'));
-
-//set up view engine type
-app.set('view engine','ejs');
-//view folder path
-app.set('views',path.join(__dirname,'views'));
 
 //mongo store is used to store session cookie in db
 app.use(session({
@@ -63,6 +66,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 //user information is passed to locals when user is authenticated
 app.use(passport.setAuthenticatedUser);
+app.use(flash());
+app.use(customMware.setFlash);
 
 //use express router
 app.use('/',require('./routes'));
