@@ -1,9 +1,7 @@
 {
-    //method to submit post data using Ajax
-    console.log('working')
+  //method to submit post data using Ajax
     let createPost = function(){
         let newPostForm = $('#new-post-form');
-        console.log(newPostForm);
         newPostForm.submit((e) => {
             e.preventDefault();
 
@@ -16,15 +14,72 @@
                     $('#post-list-container>ul').prepend(newPost);
                     $('#new-post-form')[0][0].value='';
                     deletePost($(' .delete-post-button',newPost));
+                    createComment($(' form',newPost))
                     callNotification(data.success,null);
                 },
                 error:(error) => {
-                    console.log(error.responseText);
                     callNotification(null,error.responseText);
                 }
             });
         });
     }
+
+
+    let createComment = function(form){
+        form.submit(function (e) {
+            e.preventDefault()
+            $.ajax({
+                type:'post',
+                url:'/comment/create',
+                data:$(this).serialize(),
+                success:(data) => {
+                    let newComment = newCommentDom(data.data.comment);
+                    $(this)[0][0].value = '';
+                    $(`#post-comments-${data.data.comment.post}`).prepend(newComment);
+                    deleteComment($(' .delete-comment-button',newComment));
+                    callNotification(data.success,null);
+                },
+                error:(error) => {
+                    callNotification(null,error.responseText);
+                }
+            }); 
+        })                
+    }
+
+    //method to create comment in DOM
+    let newCommentDom = function(comment){
+        return $(`<li id="comment-${comment._id}">
+        <p>
+            <small>
+                <a class="delete-comment-button" href="/comment/destroy/${comment._id}">X</a>
+            </small>   
+            ${comment.content}
+            <br>
+            <small>
+                ${comment.user.name}
+            </small>
+        </p>
+        </li>`)
+    }
+
+    let deleteComment = function(deleteLink) {
+        $(deleteLink).click((e) => {
+            e.preventDefault();
+
+            $.ajax({
+                type:'get',
+                url:$(deleteLink).attr('href'),
+                success:(data) => {
+                    $(`#comment-${data.data.comment_id}`).remove();
+                    callNotification(data.success,null);
+                },
+                error:(error) => {
+                    callNotification(null,error.responseText);
+                }
+            })
+        })
+    }
+
 
     //method to create post in DOM
 
@@ -64,7 +119,6 @@
     //delete post from DOM
 
     let deletePost = function(deleteLink){
-        console.log('delete post1')
         $(deleteLink).click((e) => {
             e.preventDefault();
 
@@ -72,21 +126,20 @@
                 type:'get',
                 url:$(deleteLink).attr('href'),
                 success:(data) => {
-                    console.log(data,'delete post');
                     $(`#post-${data.data.post_id}`).remove();
                     callNotification(data.success,null);
                 },
                 error:(error) => {
-                    console.log(error.responseText)
                     callNotification(null,error.responseText);
                 }
             })
         })
     }
 
-    let addDeletePost = function(){
+
+
+    let DeletePostHandler = function(){
         let deleteLinks = $('.delete-post-button');
-        console.log(deleteLinks);
         for(deleteLink of deleteLinks){
             deletePost(deleteLink);
         }
@@ -114,7 +167,7 @@
         }
     }
 
-    addDeletePost();
+    DeletePostHandler();
     createPost();
 }
 

@@ -1,7 +1,5 @@
 const Post = require('../models/posts');
 const User = require('../models/user');
-
-console.log('in home controller');
 module.exports.home = async function (req,res) {
     // console.log(req.cookies);
     // res.cookie('user_id',14);
@@ -14,7 +12,6 @@ module.exports.home = async function (req,res) {
     // });
 
     try{
-        console.log('in home controller home')
         let posts = await Post.find({})
         .sort('-createdAt')
         .populate('user')

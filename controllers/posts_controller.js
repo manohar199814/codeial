@@ -4,11 +4,10 @@ const Comment = require('../models/comment');
 module.exports.create = async function (req,res) {
     try{
         let post = await (await Post.create({content : req.body.content, user:req.user._id})).populate('user','name');
-        console.log(post,'from post create');
         if(req.xhr) {
             
             req.flash('success','Post Created');
-            return res.status(200).json({
+            return res.status(200).json({ 
                 data:{
                     post:post
                 },
@@ -46,8 +45,6 @@ module.exports.destroy = async function(req,res) {
                     success:req.flash('success')
                 })
            }
-           
-           
             return res.redirect('back');
         }else{
             req.flash('error','You cant delete Post');
