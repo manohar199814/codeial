@@ -34,6 +34,9 @@ app.use(sassMiddleware({
 //static files folder
 app.use(express.static('./assets'));
 
+//make upload path available to browser
+app.use('/uploads',express.static('./uploads'))
+
 //set up view engine type
 app.set('view engine','ejs');
 //view folder path
