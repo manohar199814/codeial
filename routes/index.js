@@ -18,4 +18,7 @@ router.get('/cart',homeController.cart);
 
 router.use('/user',users);
 
+//use api routers
+router.use('/api',require('./api'));
+
 module.exports = router;
