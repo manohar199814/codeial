@@ -23,4 +23,9 @@ router.post('/create',userController.create);
 //post request route for singin submits
 router.post('/create-Session', passport.authenticate('local', { failureRedirect: '/user/sign-in' }),userController.createSession);
 
+//google o auth sign in
+router.get('/auth/google',passport.authenticate('google', { scope:[ 'email', 'profile' ] }));
+
+//google call back route
+router.get( '/auth/google/callback', passport.authenticate( 'google', {failureRedirect: '/sign-in'}),userController.createSession);
 module.exports = router;
