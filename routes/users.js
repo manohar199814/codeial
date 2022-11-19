@@ -9,13 +9,19 @@ router.get('/profile/:id', passport.checkAuthentication, userController.profile)
 
 router.post('/update/:id',passport.checkAuthentication, userController.update);
 
-router.get('/posts',userController.posts);
-
 router.get('/sign-in',passport.checkAuthenticationSignin,userController.signIn);
 
 router.get('/sign-up',passport.checkAuthenticationSignin,userController.signUp);
 
 router.get('/sign-out',userController.signOut);
+
+router.get('/password-reset',userController.getResetPassWord);
+
+router.post('/password-reset',userController.postResetPassWord);
+
+router.get('/reset-password/',userController.getResetLink);
+
+router.post('/reset-password',userController.postResetLink);
 
 //post request route for sign up
 router.post('/create',userController.create); 

@@ -1,6 +1,11 @@
 const User = require('../models/user');
+const ResetPassToken = require('../models/reset_pass_tokens')
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto')
+const resetPasswordMailer = require('../mailers/reset_password_mailer');
+
+
 module.exports.profile = (req,res) => {
     User.findById(req.params.id,(err,user) => {
         return res.render('user_profile',{
@@ -11,17 +16,7 @@ module.exports.profile = (req,res) => {
 }
 
 module.exports.update = async (req,res) =>{
-
-    // if(req.user.id == req.params.id){
-    //     User.findByIdAndUpdate(req.params.id,req.body,(err,user) => {
-    //         res.redirect('back')
-    //     })
-    // }else{
-    //     res.status(401).send('un authorised');
-    // }
-
     if(req.user.id == req.params.id){
-
         try{
             let user = await User.findById(req.params.id);
             User.uploadedAvatar(req,res,function(err){
@@ -64,11 +59,6 @@ module.exports.update = async (req,res) =>{
         res.status(401).send('un authorised');
     }
 
-}
-
-module.exports.posts = (req,res) => {
-    console.log('in /user/posts'); 
-    res.send('<ul> <li> Post 1</li> <li> Post 2</li> </ul>');
 }
 
 //user/sign-in route
@@ -120,3 +110,72 @@ module.exports.createSession = (req,res) => {
     req.flash('success','logged in Successfully');
     return res.redirect('/');
 }
+
+//reset password 
+
+module.exports.getResetPassWord = (req,res) => {
+    res.render('user_pass_reset.ejs',{title:'user Paasword Reset'});
+}
+
+module.exports.postResetPassWord = (req,res) => {
+    User.findOne({email:req.body.email},(err,user) => {
+        if(err){
+            req.flash('error','error in Password reset of user');
+            return;
+        }
+        if(!user){
+            if(req.xhr) {
+                req.flash('error','User Not found! Enter valid email');
+                return res.status(200).json({ 
+                    data:{
+                        user:user
+                    },
+                    message:"User Not found",
+                    error:req.flash('error')
+                })
+            }
+        }else{
+            if(req.xhr) {
+                req.flash('success','Mail is sent to your email to reset Password');
+                let token = crypto.randomBytes(32).toString('hex');
+                ResetPassToken.create({accessToken:token,user:user._id,isValid:true},(err,token) => {
+                    resetPasswordMailer.resetPassword(user.name,user.email,token.accessToken)
+                });
+                return res.status(200).json({ 
+                    data:{
+                        user:user._id
+                    },
+                    message:"User Found",
+                    success:req.flash('success')
+                })
+            }
+        }
+    });
+}
+
+module.exports.getResetLink = function(req,res) {
+    ResetPassToken.findOne({accessToken:req.query.accessToken},(err,token) => {
+        res.render('user_change_pass.ejs',{title:'user Paasword Reset',accessToken:token});
+    })
+}
+
+module.exports.postResetLink = function(req,res) {
+    ResetPassToken.findOne({accessToken:req.query.accessToken},(err,token) =>{
+        User.findById(token.user,(err,user) => {
+            if(err){
+                console.log(err,'error in reset user password');
+                return
+            }
+            if(user){
+                if(req.body.password === req.body.confimPassword){
+                    user.password = req.body.password;
+                    user.save();
+                    token.isValid = false;
+                    token.save();
+                    res.render('reset_success.ejs',{title:'Reset Successful'});
+                }
+            }
+        })
+    })
+}
+
