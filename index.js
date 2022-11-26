@@ -24,6 +24,12 @@ const port = 8000;
 
 const app = express();
 
+const chatServer = require("http").Server(app);
+const chatSockets = require('./config/chat_sockets').chatSockets(chatServer);
+chatServer.listen(5000);
+console.log('chat srver is listening on port 5000')
+
+
 app.use(sassMiddleware({
     /* Options */
     src: path.join(__dirname, 'assets','scss'),
