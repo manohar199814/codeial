@@ -1,4 +1,5 @@
 const express = require('express');
+const env = require('./config/environment');
 const expressLayouts = require('express-ejs-layouts');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -32,15 +33,15 @@ console.log('chat srver is listening on port 5000')
 
 app.use(sassMiddleware({
     /* Options */
-    src: path.join(__dirname, 'assets','scss'),
-    dest: path.join(__dirname, 'assets','css'),
+    src: path.join(__dirname, env.asset_path,'scss'),
+    dest: path.join(__dirname, env.asset_path ,'css'),
     debug: true,
     outputStyle: 'extended',
     prefix:  '/css'  // Where prefix is at <link rel="stylesheets" href="prefix/style.css"/>
 }));
 
 //static files folder
-app.use(express.static('./assets'));
+app.use(express.static(env.asset_path));
 
 //make upload path available to browser
 app.use('/uploads',express.static('./uploads'))
@@ -64,7 +65,7 @@ app.use(cookieParser())
 //mongo store is used to store session cookie in db
 app.use(session({
     name:'codeial',
-    secret:'blahsomething',
+    secret:env.session_cookie_key,
     saveUninitialized:false,
     resave:false,
     cookie:{
