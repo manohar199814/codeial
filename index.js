@@ -1,5 +1,6 @@
 const express = require('express');
 const env = require('./config/environment');
+const logger = require('morgan');
 const expressLayouts = require('express-ejs-layouts');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -30,7 +31,7 @@ const chatSockets = require('./config/chat_sockets').chatSockets(chatServer);
 chatServer.listen(5000);
 console.log('chat srver is listening on port 5000')
 
-
+if (env.name == 'development'){
 app.use(sassMiddleware({
     /* Options */
     src: path.join(__dirname, env.asset_path,'scss'),
@@ -39,13 +40,16 @@ app.use(sassMiddleware({
     outputStyle: 'extended',
     prefix:  '/css'  // Where prefix is at <link rel="stylesheets" href="prefix/style.css"/>
 }));
+}
 
 //static files folder
+console.log(env.asset_path);
 app.use(express.static(env.asset_path));
 
 //make upload path available to browser
 app.use('/uploads',express.static('./uploads'))
 
+app.use(logger(env.morgan.mode, env.morgan.options));
 //set up view engine type
 app.set('view engine','ejs');
 //view folder path
