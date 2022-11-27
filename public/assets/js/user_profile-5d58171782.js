@@ -1,0 +1,1 @@
+{let e=document.getElementById("profile_pic"),c=document.getElementById("avatar");e&&c&&(c.onchange=o=>{console.log("changed");const[t]=c.files;console.log(c.files),t&&(e.src=URL.createObjectURL(t))})}
