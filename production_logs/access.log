@@ -97,3 +97,9 @@
 [0mGET /css/header.css [33m404[0m 15.736 ms - 153[0m
 [0mGET /css/footer.css [33m404[0m 6.240 ms - 153[0m
 [0mGET /css/user_sign.css [33m404[0m 8.272 ms - 156[0m
+::1 - - [27/Nov/2022:12:12:03 +0000] "GET /user/sign-in HTTP/1.1" 200 5885 "http://localhost:8000/user/sign-in" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
+::1 - - [27/Nov/2022:12:12:07 +0000] "GET / HTTP/1.1" 200 3655 "http://localhost:8000/user/sign-in" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
+::1 - - [27/Nov/2022:12:12:09 +0000] "GET /user/sign-in HTTP/1.1" 304 - "http://localhost:8000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
+::1 - - [27/Nov/2022:12:12:19 +0000] "POST /user/create-session HTTP/1.1" 302 46 "http://localhost:8000/user/sign-in" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
+::1 - - [27/Nov/2022:12:12:20 +0000] "GET / HTTP/1.1" 200 5428 "http://localhost:8000/user/sign-in" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
+::1 - - [27/Nov/2022:12:12:25 +0000] "POST /comment/create HTTP/1.1" 200 342 "http://localhost:8000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
